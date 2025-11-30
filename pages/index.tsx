@@ -102,7 +102,7 @@ export default function Home() {
 
 					<div className='mt-4 flex gap-3 items-center'>
 						<details className='dropdown'>
-							<summary className='btn m-1'>
+							<summary className='btn'>
 								{selectedModel === '' ? 'Select Model' : selectedModel}
 							</summary>
 							<ul className='menu dropdown-content bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm'>
@@ -129,7 +129,7 @@ export default function Home() {
 
 						<button
 							type='submit'
-							className='inline-flex items-center px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 disabled:opacity-60'
+							className='inline-flex items-center px-4 py-3 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 disabled:opacity-60'
 							disabled={loading || tooLong}
 						>
 							{loading ? 'Rewriting...' : 'Rewrite Text'}
@@ -137,7 +137,7 @@ export default function Home() {
 
 						<button
 							type='button'
-							className='inline-flex items-center px-4 py-2 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200'
+							className='inline-flex items-center px-4 py-3 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200'
 							onClick={() => {
 								setText('');
 								setResult(null);
