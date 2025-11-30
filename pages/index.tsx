@@ -1,5 +1,4 @@
-import { useState } from 'react';
-import React from 'react';
+import React, { useState } from 'react';
 
 export default function Home() {
 	const [text, setText] = useState('');
@@ -7,12 +6,12 @@ export default function Home() {
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState<string | null>(null);
 	const [copySuccess, setCopySuccess] = useState<string | null>(null);
+	const [selectedModel, setSelectedModel] = useState<string>('');
 
 	function wordCount(s: string) {
 		return s.trim() === '' ? 0 : s.trim().split(/\s+/).length;
 	}
 
-	// Rough token estimate: 1 token ~= 0.75 words => tokens ~= words / 0.75
 	function estimateTokensFromWords(words: number) {
 		return Math.ceil(words / 0.75);
 	}
@@ -38,7 +37,7 @@ export default function Home() {
 			const res = await fetch('/api/rewrite', {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify({ text }),
+				body: JSON.stringify({ text, selectedModel }),
 			});
 			if (!res.ok) {
 				const body = await res.json().catch(() => ({}));
@@ -101,7 +100,33 @@ export default function Home() {
 					)}
 					{error && <p className='mt-3 text-sm text-red-600'>{error}</p>}
 
-					<div className='mt-4 flex gap-3'>
+					<div className='mt-4 flex gap-3 items-center'>
+						<details className='dropdown'>
+							<summary className='btn m-1'>
+								{selectedModel === '' ? 'Select Model' : selectedModel}
+							</summary>
+							<ul className='menu dropdown-content bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm'>
+								<li>
+									<a
+										onClick={(event) => {
+											setSelectedModel('gpt-3.5-turbo');
+										}}
+									>
+										gpt-3.5-turbo
+									</a>
+								</li>
+								<li>
+									<a
+										onClick={(event) => {
+											setSelectedModel('gpt-4');
+										}}
+									>
+										gpt-4
+									</a>
+								</li>
+							</ul>
+						</details>
+
 						<button
 							type='submit'
 							className='inline-flex items-center px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 disabled:opacity-60'
@@ -112,7 +137,7 @@ export default function Home() {
 
 						<button
 							type='button'
-							className='inline-flex items-center px-4 py-2 bg-gray-100 text-gray-700 rounded-md'
+							className='inline-flex items-center px-4 py-2 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200'
 							onClick={() => {
 								setText('');
 								setResult(null);
@@ -139,7 +164,7 @@ export default function Home() {
 								Copy
 							</button>
 							<button
-								className='inline-flex items-center px-3 py-1.5 bg-gray-100 text-gray-700 rounded-md'
+								className='inline-flex items-center px-3 py-1.5 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200'
 								onClick={() => {
 									setResult(null);
 								}}

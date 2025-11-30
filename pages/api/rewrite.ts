@@ -11,7 +11,14 @@ export default async function handler(
 		return res.status(405).json({ error: 'Method not allowed' });
 	}
 
-	const { text } = req.body as { text?: string };
+	const { text } = req.body as {
+		text?: string;
+	};
+
+	const { selectedModel = 'gpt-3.5-turbo' } = req.body as {
+		selectedModel?: string;
+	};
+
 	if (!text || typeof text !== 'string') {
 		return res.status(400).json({ error: 'Missing `text` in request body' });
 	}
@@ -40,7 +47,7 @@ export default async function handler(
 				},
 				body: JSON.stringify({
 					// model: 'gpt-5.1', //gpt-3.5-turbo
-					model: 'gpt-3.5-turbo',
+					model: selectedModel || 'gpt-3.5-turbo',
 					messages: [
 						{
 							role: 'system',
@@ -51,6 +58,7 @@ export default async function handler(
 					],
 					// max_completion_tokens: 800, // for 5.1
 					max_tokens: 800,
+					// max_output_tokens: 800,
 					temperature: 0.7,
 				}),
 			},
